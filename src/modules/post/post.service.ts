@@ -19,9 +19,10 @@ const createPost = async (
 const getAllPost = async (
   payload: string,
   tags: string[] | [],
-  isFeatured: boolean
+  isFeatured: boolean,
+  authorId: string
 ) => {
-  console.log({ isFeatured });
+  console.log({ authorId });
 
   const result = await prisma.post.findMany({
     where: {
@@ -48,6 +49,9 @@ const getAllPost = async (
         hasEvery: tags,
       },
       isFeatured: isFeatured,
+      authorId: {
+        contains: authorId,
+      },
     },
   });
 

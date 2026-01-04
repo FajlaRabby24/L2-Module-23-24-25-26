@@ -31,11 +31,13 @@ const getAllPost = async (req: Request, res: Response) => {
     const isFeatured = req.query.isFeatured
       ? req.query.isFeatured === "true"
       : false;
+    const authorId = req.query.authorId || "";
 
     const result = await postService.getAllPost(
       searchQuery as string,
       tags,
-      isFeatured
+      isFeatured,
+      authorId as string
     );
     res.status(200).json(result);
   } catch (error) {
