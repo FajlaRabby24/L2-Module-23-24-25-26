@@ -16,7 +16,7 @@ const createPost = async (
 };
 
 // get post
-const getAllPost = async (payload: string) => {
+const getAllPost = async (payload: string, tags: string[] | []) => {
   const result = await prisma.post.findMany({
     where: {
       OR: [
@@ -38,6 +38,9 @@ const getAllPost = async (payload: string) => {
           },
         },
       ],
+      tags: {
+        hasEvery: tags,
+      },
     },
   });
   return result;
