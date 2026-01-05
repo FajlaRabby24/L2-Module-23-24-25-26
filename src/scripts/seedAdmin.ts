@@ -33,7 +33,11 @@ const seedAdmin = async () => {
         body: JSON.stringify(adminData),
       }
     );
+
+    console.log(signUpAdmin);
   } catch (error) {
     console.log(error);
   }
 };
+
+seedAdmin();
