@@ -1,7 +1,84 @@
+// import { Post } from "../../../generated/prisma/client";
+// import { prisma } from "../../lib/prisma";
+
+// // create new post
+// const createPost = async (
+//   data: Omit<Post, "id" | "createdAt" | "updatedAt" | "authorId">,
+//   userId: string
+// ) => {
+//   const result = await prisma.post.create({
+//     data: {
+//       ...data,
+//       authorId: userId,
+//     },
+//   });
+//   return result;
+// };
+
+// // get post
+// const getAllPost = async (
+// payload: string,
+// tags: string[] | [],
+// isFeatured: boolean,
+// authorId: string,
+// page: number,
+// limit: number,
+// skip: number,
+// sortBy: string,
+// sortOrder: string
+// ) => {
+//   const result = await prisma.post.findMany({
+//     take: limit,
+//     skip,
+//     where: {
+//       OR: [
+//         {
+//           title: {
+//             contains: payload as string,
+//             mode: "insensitive",
+//           },
+//         },
+//         {
+//           content: {
+//             contains: payload as string,
+//             mode: "insensitive",
+//           },
+//         },
+//         {
+//           tags: {
+//             has: payload as string,
+//           },
+//         },
+//       ],
+//       tags: {
+//         hasEvery: tags,
+//       },
+//       isFeatured: isFeatured,
+//       authorId: {
+//         contains: authorId,
+//       },
+//     },
+//     orderBy: {
+//       [sortBy]: sortOrder,
+//     },
+//   });
+
+//   const total = await prisma.post.count({
+
+//   })
+
+//   return result;
+// };
+
+// export const postService = {
+//   createPost,
+//   getAllPost,
+// };
+
 import { Post } from "../../../generated/prisma/client";
+import { PostWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
-// create new post
 const createPost = async (
   data: Omit<Post, "id" | "createdAt" | "updatedAt" | "authorId">,
   userId: string
@@ -15,9 +92,8 @@ const createPost = async (
   return result;
 };
 
-// get post
 const getAllPost = async (
-  payload: string,
+  search: string,
   tags: string[] | [],
   isFeatured: boolean,
   authorId: string,
@@ -27,43 +103,78 @@ const getAllPost = async (
   sortBy: string,
   sortOrder: string
 ) => {
-  const result = await prisma.post.findMany({
-    take: limit,
-    skip,
-    where: {
+  const andConditions: PostWhereInput[] = [];
+
+  if (search) {
+    andConditions.push({
       OR: [
         {
           title: {
-            contains: payload as string,
+            contains: search,
             mode: "insensitive",
           },
         },
         {
           content: {
-            contains: payload as string,
+            contains: search,
             mode: "insensitive",
           },
         },
         {
           tags: {
-            has: payload as string,
+            has: search,
           },
         },
       ],
+    });
+  }
+
+  if (tags.length > 0) {
+    andConditions.push({
       tags: {
-        hasEvery: tags,
+        hasEvery: tags as string[],
       },
-      isFeatured: isFeatured,
-      authorId: {
-        contains: authorId,
-      },
+    });
+  }
+
+  if (typeof isFeatured === "boolean") {
+    andConditions.push({
+      isFeatured,
+    });
+  }
+
+  if (authorId) {
+    andConditions.push({
+      authorId,
+    });
+  }
+
+  const allPost = await prisma.post.findMany({
+    take: limit,
+    skip,
+    where: {
+      AND: andConditions,
     },
     orderBy: {
       [sortBy]: sortOrder,
     },
   });
 
-  return result;
+  const total = await prisma.post.count({
+    where: {
+      AND: andConditions,
+    },
+  });
+
+  return {
+    data: allPost,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPage: Math.ceil(total / limit),
+    },
+  };
 };
 
 export const postService = {
