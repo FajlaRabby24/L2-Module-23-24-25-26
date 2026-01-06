@@ -29,6 +29,7 @@ const seedAdmin = async () => {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          Origin: "http://localhost:4000",
         },
         body: JSON.stringify(adminData),
       }
