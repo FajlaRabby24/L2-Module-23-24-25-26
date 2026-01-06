@@ -34,14 +34,9 @@ const getAllPost = async (req: Request, res: Response) => {
       : false;
     const authorId = req.query.authorId || "";
 
-    const page = Number(req.query.page ?? 1);
-    const limit = Number(req.query.limit ?? 10);
-    const skip = (page - 1) * limit;
-
-    const sortBy = req.query.sortBy as string;
-    const sortOrder = req.query.sortOrder as string;
-
-    const options = paginationSortingHelper(req.query);
+    const { page, limit, skip, sortBy, sortOrder } = paginationSortingHelper(
+      req.query
+    );
 
     const result = await postService.getAllPost(
       searchQuery as string,
@@ -51,8 +46,8 @@ const getAllPost = async (req: Request, res: Response) => {
       page,
       limit,
       skip,
-      sortBy as string | undefined,
-      sortOrder as string | undefined
+      sortBy,
+      sortOrder
     );
 
     res.status(200).json(result);
