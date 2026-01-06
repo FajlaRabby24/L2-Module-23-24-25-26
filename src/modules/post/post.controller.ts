@@ -33,12 +33,18 @@ const getAllPost = async (req: Request, res: Response) => {
       : false;
     const authorId = req.query.authorId || "";
 
+    const page = Number(req.query.page ?? 1);
+    const limit = Number(req.query.limit ?? 10);
+
     const result = await postService.getAllPost(
       searchQuery as string,
       tags,
       isFeatured,
-      authorId as string
+      authorId as string,
+      page,
+      limit
     );
+
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({

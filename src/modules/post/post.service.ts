@@ -20,10 +20,10 @@ const getAllPost = async (
   payload: string,
   tags: string[] | [],
   isFeatured: boolean,
-  authorId: string
+  authorId: string,
+  page: number,
+  limit: number
 ) => {
-  console.log({ authorId });
-
   const result = await prisma.post.findMany({
     where: {
       OR: [
