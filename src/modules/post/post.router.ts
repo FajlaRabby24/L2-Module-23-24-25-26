@@ -19,7 +19,7 @@ declare global {
   }
 }
 
-const auth = (...roles: string[]) => {
+export const auth = (...roles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const session = await betterAuth.api.getSession({

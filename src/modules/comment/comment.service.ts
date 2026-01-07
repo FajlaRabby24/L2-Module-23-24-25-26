@@ -1,5 +1,12 @@
-import { Router } from "express";
+const createComment = (payload: {
+  content: string;
+  authorId: string;
+  postId: string;
+  parentId: string;
+}) => {
+  console.log("comment created!!", payload);
+};
 
-const router = Router();
-
-export const commentRouter = router;
+export const commentService = {
+  createComment,
+};

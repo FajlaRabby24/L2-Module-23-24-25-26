@@ -3,7 +3,7 @@ import cors from "cors";
 import express from "express";
 import { config } from "./config";
 import { auth } from "./lib/auth";
-import { commentRouter } from "./modules/comment/comment.service";
+import { commentRouter } from "./modules/comment/comment.router";
 import { postRouter } from "./modules/post/post.router";
 
 const app = express();
