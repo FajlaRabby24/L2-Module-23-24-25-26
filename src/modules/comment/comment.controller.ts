@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { sendResponse } from "../../utils/sendResponse";
 import { commentService } from "./comment.service";
 
 // create comment -> admin, user
@@ -101,10 +102,40 @@ const updateComment = async (req: Request, res: Response) => {
   }
 };
 
+const getAllComment = async (req: Request, res: Response) => {
+  try {
+    const result = await commentService.getAllComment();
+    sendResponse(res, 200, true, "comments retrived successfully!", result);
+  } catch (error) {
+    sendResponse(res, 400, false, "comments retrived failed!", error);
+  }
+};
+
+// moderate comment
+const moderateComment = async (req: Request, res: Response) => {
+  try {
+    const { commentId } = req.params;
+
+    const result = await commentService.moderateComment(
+      commentId as string,
+      req.body
+    );
+    sendResponse(res, 200, true, "", result);
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({
+      error: "Comment update failed!",
+      details: e,
+    });
+  }
+};
+
 export const commentController = {
   createComment,
   getCommentById,
   getCommentsByAuthor,
   deleteComment,
   updateComment,
+  moderateComment,
+  getAllComment,
 };

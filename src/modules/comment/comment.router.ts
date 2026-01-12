@@ -7,6 +7,8 @@ const router = Router();
 
 router.get("/:commentId", commentController.getCommentById);
 
+router.get("/", commentController.getAllComment);
+
 router.get("/author/:authorId", commentController.getCommentsByAuthor);
 
 // create comment -> admin, user
@@ -26,6 +28,12 @@ router.patch(
   "/:commentId",
   auth(UserRoles.USER, UserRoles.ADMIN),
   commentController.updateComment
+);
+
+router.patch(
+  "/:commentId/moderate",
+  auth(UserRoles.ADMIN),
+  commentController.moderateComment
 );
 
 export const commentRouter = router;
