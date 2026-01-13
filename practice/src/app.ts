@@ -3,6 +3,8 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import { config } from "./config";
 import { auth } from "./lib/auth";
+import { globalErrorHandler } from "./middleware/globalErrorHandler";
+import { notFound } from "./middleware/notFound";
 import { commentRouter } from "./modules/comment/commentRouter";
 import { postRouter } from "./modules/post/postRoute";
 
@@ -28,5 +30,8 @@ app.get("/", (req: Request, res: Response) => {
     message: "This is root route for testing.",
   });
 });
+
+app.use(notFound);
+app.use(globalErrorHandler);
 
 export default app;
