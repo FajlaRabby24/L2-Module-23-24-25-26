@@ -4,6 +4,7 @@ import express, { Request, Response } from "express";
 import { config } from "./config";
 import { auth } from "./lib/auth";
 import { errorHandler } from "./middlewares/globalErrorHandler";
+import { notFound } from "./middlewares/notFound";
 import { commentRouter } from "./modules/comment/comment.router";
 import { postRouter } from "./modules/post/post.router";
 
@@ -29,6 +30,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
+app.use(notFound);
 app.use(errorHandler);
 
 export default app;
