@@ -1,8 +1,9 @@
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
-import express from "express";
+import express, { Request, Response } from "express";
 import { config } from "./config";
 import { auth } from "./lib/auth";
+import { errorHandler } from "./middlewares/globalErrorHandler";
 import { commentRouter } from "./modules/comment/comment.router";
 import { postRouter } from "./modules/post/post.router";
 
@@ -20,5 +21,14 @@ app.all("/api/auth/*spalte", toNodeHandler(auth));
 
 app.use("/api/post", postRouter);
 app.use("/api/comment", commentRouter);
+
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: "This is root route for testing.",
+  });
+});
+
+app.use(errorHandler);
 
 export default app;

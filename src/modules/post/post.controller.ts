@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserRoles } from "../../constant";
 import { paginationSortingHelper } from "../../helpers/paginationSortingHelper";
 import { sendResponse } from "../../utils/sendResponse";
 import { postService } from "./post.service";
 
 // create new post
-const createPost = async (req: Request, res: Response) => {
+const createPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user) {
       return res.status(400).json({
@@ -18,10 +18,11 @@ const createPost = async (req: Request, res: Response) => {
       ...result,
     });
   } catch (error) {
-    res.status(400).json({
-      error: "post creation failed",
-      details: error,
-    });
+    // res.status(400).json({
+    //   error: "post creation failed",
+    //   details: error,
+    // });
+    next(error);
   }
 };
 
