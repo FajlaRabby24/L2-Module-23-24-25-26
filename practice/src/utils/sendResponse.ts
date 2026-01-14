@@ -5,11 +5,11 @@ export const sendResponse = (
   statusCode: number,
   success: boolean,
   message?: string,
-  data?: any
+  info?: any
 ) => {
   return res.status(statusCode).json({
     success: success,
     message,
-    data,
+    info,
   });
 };

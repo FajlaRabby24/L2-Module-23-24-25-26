@@ -18,7 +18,7 @@ app.use(
 
 app.all("/api/auth/*spalte", toNodeHandler(auth));
 
-app.use("/api/posts", postRouter);
+app.use("/api/post", postRouter);
 
 app.use("/api/comment", commentRouter);
 
